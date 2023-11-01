@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}INTECAP{% endblock %}
+
+{% block links %}
+  <!-- Custom styles for this template-->
+  <link href="/static/css/sb-admin.css" rel="stylesheet">
+{% endblock %}
+
+
+
+
+
+
+
+{% block body %}
+<body id="page-top">
+
+
+
+        <!-- DataTables Example -->
+        <div class="card mb-3">
+          
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Data Table Example</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <form action="" method="POST">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Grupo Sanguíneo</th>
+                    <th>Fecha nac</th>
+
+                  </tr>
+
+                  <tr>
+                    {% if messages %}
+                      <div class="row">
+                          {% for message in messages %}
+                          <div class="alert alert-{{ message.tags }}" role="alert">
+                              <p>{{ message }}</p>
+                          </div>
+                          {% endfor %}
+                      </div>
+                    {% endif %}
+
+                    <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" action="" method="POST">
+                      {% csrf_token %}
+                      <div class="input-group">
+                        <th>                      
+                          <input type="text" name="nombre" class="form-control" placeholder="Nombre" aria-label="Search" aria-describedby="basic-addon2">
+                        </th> 
+                        <th>                      
+                          <input type="text" name="apellido" class="form-control" placeholder="Apellidos" aria-label="Search" aria-describedby="basic-addon2">
+                        </th>
+                        <th>
+                          <label for="mi_select">Seleccione tipo de sangre:</label>                      
+                          <select id="mi_select" name="mi_select">
+                            <option value="">SELECIONE UN TIPO </option>
+                            {%for i in  grupo_sanguineo%}                            
+                            <option value="{{i.id}}">{{i.tipo}}{{i.factor}}</option>
+                            {% endfor %}
+                            <!-- Agrega más opciones según sea necesario -->
+                        </select>
+                        </th>
+                        <th>                      
+                          <input type="date"  name="fechanac" class="form-control"  aria-label="Search" aria-describedby="basic-addon2">
+                        </th>
+                        
+                        {% comment %} <th>                      
+                          <input type="password" name="fechanac" class="form-control"  aria-label="Search" aria-describedby="basic-addon2">
+                        </th> {% endcomment %}
+                        <th>                      
+                          <button type="submit" class="btn btn-primary">Guardar</button>
+                        </th>
+                        
+                      </div>
+                    </form>
+                  </tr>
+
+                </thead>
+              
+
+              <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" action="" method="GET">
+                {% csrf_token %}
+                <tbody>
+                  <tr>
+                    <th>Ingrese nombre para la búsqueda</th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <input type="text" name="nombreBusqueda" class="form-control" placeholder="Nombre o tipo de sangre" aria-label="Search" aria-describedby="basic-addon2">
+                    </th>
+                    <th>                      
+                      <button type="submit" class="btn btn-success">Buscar</button>
+                    </th>
+                  </tr>
+                </tbody> 
+            </form>
+            <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" action="" method="GET">
+              {% csrf_token %}
+              <tbody>
+                  <th>                      
+                    <button type="submit" class="btn btn-info">Ver todos</button>
+                  </th>
+                
+              </tbody> 
+          </form>
+          
+          <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" action="" method="GET">
+            {% csrf_token %}
+            <tbody>
+                <tr>
+                    <th>Seleccione un Rango de Fecha:</th>
+                </tr>
+                <tr>
+                    <th>
+                        <input type="date" name="fecha_inicio" class="form-control" aria-label="Fecha de inicio">
+                    </th>
+                    <th>
+                        <input type="date" name="fecha_fin" class="form-control" aria-label="Fecha final">
+                    </th>
+                    <th>
+                        <button type="submit" class="btn btn-success">Buscar por Fecha</button>
+                    </th>
+                </tr>
+            </tbody>
+        </form>
+
+        <tr>
+          <th>Nombres</th>
+          <th>Apellidos</th>          
+          <th>Fecha de nacimiento</th>
+          <th>Grupo Sanguíneo</th>
+        </tr>
+
+
+        <!-- Formularios para búsqueda por nombre y búsqueda por rango de fechas -->
+
+ {% if busqueda_fecha %}
+<h2>Donantes encontrados en el rango de fechas:</h2>
+</tr>
+        </tr>
+        {% for i in busqueda_fecha %}
+        
+        <tr>
+          <td>{{ i.nombre }}</td>
+          <td>{{ i.apellido }}</td>
+          <td>{{ i.fecha_nacimiento}}</td>
+          <td>{{ i.grupo_sanguineo}}</td>
+          <td><a href="edicionDonante/{{ i.id }}"   class="btn btn-info"> Editar </a>  </td>
+          <td><a href="donante/{{ i.id }}"   class="btn btn-danger"> Eliminar </a>  </td>
+
+          
+        </tr>
+        {% endfor %}
+        {% elif busqueda%}
+        </tr>
+        {% for i in busqueda %}
+
+        <tr>
+          <td>{{ i.nombre }}</td>
+          <td>{{ i.apellido }}</td>
+          <td>{{ i.fecha_nacimiento}}</td>
+          <td>{{ i.grupo_sanguineo}}</td>
+
+          <td><a href="registrar_donacion/{{ i.id }}" class="btn btn-primary mb-2"> Donar</a></td>
+          <td><a href="mostrar_donaciones/{{ i.id }}" class="btn btn-warning mb-2"> Registro </a></td>
+          <td><a href="edicionDonante/{{ i.id }}" class="btn btn-info mt-2"> Editar </a></td>
+          <td><a href="donante/{{ i.id }}" class="btn btn-danger mt-2"> Eliminar </a></td>
+          
+          
+          
+          
+        </tr>
+        {% endfor %}
+
+        {% elif mostrar_resultado%}
+        </tr>
+            {% for i in personas_mayores %}
+
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ i.nombre }}</td>
+              <td>{{ i.apellido }}</td>
+              <td>{{ i.fecha_nacimiento}}</td>
+              <td><a href="edicionDonante/{{ i.id }}"   class="btn btn-info"> Editar </a>  </td>
+              <td><a href="donante/{{ i.id }}"   class="btn btn-danger"> Eliminar </a>  </td>
+              
+            </tr>
+            {% endfor %}
+<p>No se encontraron donantes en el rango de fechas.</p>
+{% endif %}
+
+
+{% if mostrar_resultado %}
+        <ul>
+            {% for persona in personas_mayores %}
+                <li>{{ persona.nombre }} - {{ persona.fecha_nacimiento }}</li>
+            {% endfor %}
+        </ul>
+{% endif %}
+        
+                    <form method="get">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-succes">Mostrar Personas Mayores</button>
+                    </form>
+
+                  
+        
+                
+                </tbody>
+                
+
+
+                {% comment %} <tbody>
+                {% for i in donante %}
+                  <tr>
+                    <td>{{ i.nombre }}</td>
+                    <td>{{ i.apellido }}</td>
+                    <td>{{ i.fecha_nacimiento }}</td>
+                    <td> <a href="donante/{{ i.id }}" class="btn btn-info">Editar</a></td>
+                    <td> <a href="eliminar/{{ i.id }}" class="btn btn-danger">Eliminar</a></td>
+
+                  </tr>
+                  {% endfor %}
+                </tbody> {% endcomment %}
+
+              </table>
+
+ 
+            </div>
+          </div>
+          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+      <!-- Sticky Footer -->
+      <footer class="sticky-footer">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright © Your Website 2019</span>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="login">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/static/vendor/jquery/jquery.min.js"></script>
+  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Page level plugin JavaScript-->
+  <script src="/static/vendor/chart.js/Chart.min.js"></script>
+  <script src="/static/vendor/datatables/jquery.dataTables.js"></script>
+  <script src="/static/vendor/datatables/dataTables.bootstrap4.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/static/js/sb-admin.min.js"></script>
+
+  <!-- Demo scripts for this page-->
+  <script src="/static/js/demo/datatables-demo.js"></script>
+  <script src="/static/js/demo/chart-area-demo.js"></script>
+
+</body>
+{% endblock %}

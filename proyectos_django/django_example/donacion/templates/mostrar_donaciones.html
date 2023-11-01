@@ -1,0 +1,70 @@
+{% block title %}Registro de donaciones{% endblock %}
+
+{% block links %}
+  <!-- Custom styles for this template-->
+  <link href="/static/css/sb-admin.css" rel="stylesheet">
+{% endblock %}
+<style type="text/css">
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px; /* Espacio entre la tabla y el párrafo */
+    }
+  
+    table, th, td {
+      border: 1px solid black; /* Borde de 1 píxel de grosor y color negro */
+      padding: 8px; /* Espacio interno dentro de las celdas */
+    }
+  
+    th {
+      background-color: #f2f2f2; /* Color de fondo para las celdas de encabezado */
+      text-align: center; /* Centrar el texto en las celdas de encabezado */
+    }
+  
+    h1 {
+      text-align: center; /* Centrar el título */
+    }
+  </style>
+  
+  
+{% block body %}
+
+
+<body>
+  <div class="container mt-4">
+    <h1>Historial de Donaciones de {{ donante.nombre }} {{ donante.apellido }}</h1>
+    
+    {% if donaciones %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Fecha de Donación</th>
+            <th>Cantidad</th>
+            <th>Observación</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for donacion in donaciones %}
+            <tr>
+              <td>{{ donacion.fecha_ingreso }}</td>
+              <td>{{ donacion.cantidad }}</td>
+              <td>{{ donacion.observacion }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No hay donaciones registradas para este donante.</p>
+    {% endif %}
+    
+    <a href="{% url 'donante' %}" class="btn btn-primary">Volver al Listado de Donantes</a>
+    {% if donante %}
+        <a href="{% url 'generar_pdf' donante.id %}" class="btn btn-danger">Imprimir Registro</a>
+    {% else %}
+        <p>No se puede generar el PDF sin datos válidos.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
+
+{% endblock %}

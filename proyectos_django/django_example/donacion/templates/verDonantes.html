@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">
+    Personas
+  </li>
+{% endblock %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      Listar <a href="{% url 'person:create' %}" class="btn btn-success btn-sm float-right">Registrar</a>
+    </div>
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered display dataTable" id="table" style="width:100%;">
+          <thead>
+            <tr>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Fecha nac</th>
+
+            </tr>
+            {% for i in object_list %}
+            
+            <tr>
+              <td>{{ i.nombre }}</td>
+              <td>{{ i.apellido }}</td>
+              <td>{{ i.fecha_nacimiento}}</td>
+              <td><a href="edicionDonante/{{ i.id }}"   class="btn btn-info"> Editar </a>  </td>
+              <td><a href="donante/{{ i.id }}"   class="btn btn-danger"> Eliminar </a>  </td>
+              
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_footer %}
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var table = $('#table').DataTable();
+      button_datatable(table);
+    });
+  </script>
+{% endblock %}

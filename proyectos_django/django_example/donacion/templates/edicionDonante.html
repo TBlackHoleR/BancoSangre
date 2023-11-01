@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}INTECAP{% endblock %}
+
+{% block links %}
+  <!-- Custom styles for this template-->
+  <link href="/static/css/sb-admin.css" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" action="/editarCurso/" method="POST">
+    {% csrf_token %}
+    <div class="input-group">
+        <th>                      
+            <input type="text" name="id" class="form-control" value="{{donante.id}}" placeholder="Nombre" aria-label="Search" aria-describedby="basic-addon2" readonly required>
+          </th>
+        <th>                      
+        <input type="text" name="nombre" class="form-control" value="{{donante.nombre}}" placeholder="Nombre" aria-label="Search" aria-describedby="basic-addon2">
+      </th> 
+      <th>                      
+        <input type="text" name="apellido" class="form-control" value="{{donante.apellido}}"  placeholder="Apellidos" aria-label="Search" aria-describedby="basic-addon2">
+      </th>
+      <th>                      
+        <input type="text" name="fechanac" class="form-control" value="{{donante.fecha_nacimiento}}"  aria-label="Search" aria-describedby="basic-addon2">
+      </th>
+      <th>                      
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </th>
+      
+    </div>
+  </form>
+
+
+{% endblock %}
